@@ -12,7 +12,16 @@ public class XmlMinifier {
     static Pattern openTagPattern = Pattern.compile("<(\\w+?)>");
     static Pattern closeTagPattern = Pattern.compile("</\\w+?>");
 
-    // XML 迷你化
+    /**
+     * 简单形式的XML迷你化.
+     * 1. 去除PI
+     * 2. 去除空白字符
+     * 3. 替换结束标签为$
+     * 4. 去除CDATA块开始和结束标记
+     * 5. 转换开始标签格式
+     * 例如:
+     * <abc><efg>value</efg></abc>将被转换为abc:efg:value$$
+     */
     public static String minify(String xmlMsg) {
         // 去除所有的例如<pre><?xml version="1.0" encoding="UTF-8"?></pre>的XML PI
         String minified = xmlPIPattern.matcher(xmlMsg).replaceAll("");
@@ -20,9 +29,8 @@ public class XmlMinifier {
         minified = whitePattern.matcher(minified).replaceAll("");
         // 替换所有的结束标签为$
         minified = closeTagPattern.matcher(minified).replaceAll("\\$");
-        // 去除所有的块开始标记
+        // 去除所有的块开始/结束标记
         minified = StringUtils.replace(minified, "<![CDATA[", "");
-        // 去除所有的块结束标记
         minified = StringUtils.replace(minified, "]]>", "");
         // 替换所有的开始标签,例如<abc>替换成abc:
         minified = openTagPattern.matcher(minified).replaceAll("$1:");
@@ -32,7 +40,13 @@ public class XmlMinifier {
 
     static Pattern recoverOpenTagPattern = Pattern.compile("(\\w+?):");
 
-    // XML 部分回复
+    /**
+     * XML 部分恢复(不包括空白字符的恢复).
+     * 例如: abc:efg:value$$恢复为
+     * <pre>
+     * <?xml version="1.0" encoding="UTF-8"?><abc><efg>value</efg></abc>
+     * </pre>
+     */
     public static String recover(String minified) {
         // 恢复开始标签
         String recovered = recoverOpenTagPattern.matcher(minified).replaceAll("<$1>");
@@ -43,6 +57,7 @@ public class XmlMinifier {
         recovered = StringUtils.replace(recovered, "<SvcCont>",
                 "<SvcCont><![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         recovered = StringUtils.replace(recovered, "</SvcCont>", "]]></SvcCont>");
+        recovered = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + recovered;
 
         return recovered;
     }
