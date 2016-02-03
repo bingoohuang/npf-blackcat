@@ -57,6 +57,8 @@ public class XmlMinifier {
         recovered = StringUtils.replace(recovered, "<SvcCont>",
                 "<SvcCont><![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         recovered = StringUtils.replace(recovered, "</SvcCont>", "]]></SvcCont>");
+
+        // 恢复XML PI
         recovered = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + recovered;
 
         return recovered;
@@ -65,6 +67,7 @@ public class XmlMinifier {
     static Pattern openTagOrEndTagPattern = Pattern.compile("<\\w+?>|\\$(?=<|$|\\$)");
     private static String recoverCloseTag(String recovered) {
         Matcher matcher = openTagOrEndTagPattern.matcher(recovered);
+
         Stack<String> openTags = new Stack<String>();
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
@@ -78,6 +81,7 @@ public class XmlMinifier {
             }
         }
         matcher.appendTail(sb);
+
         return sb.toString();
     }
 }
