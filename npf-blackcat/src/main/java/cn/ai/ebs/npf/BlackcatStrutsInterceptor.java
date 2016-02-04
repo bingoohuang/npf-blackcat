@@ -13,10 +13,10 @@ public class BlackcatStrutsInterceptor extends AbstractInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         String method = invocation.getProxy().getMethod();
-        ActionContext context = ActionContext.getContext();
-        Object obj = context.get(StrutsStatics.HTTP_REQUEST);
+        ActionContext actionContext = ActionContext.getContext();
+        Object httpRequest = actionContext.get(StrutsStatics.HTTP_REQUEST);
 
-        BlackcatUtils.reset((HttpServletRequest) obj);
+        BlackcatUtils.reset((HttpServletRequest) httpRequest);
         BlackcatUtils.log("METHOD.START", method);
 
         try {
