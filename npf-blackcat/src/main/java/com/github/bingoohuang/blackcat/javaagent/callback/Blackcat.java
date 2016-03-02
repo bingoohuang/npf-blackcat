@@ -7,6 +7,7 @@ import org.slf4j.MDC;
 import org.slf4j.helpers.MessageFormatter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.HttpURLConnection;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -40,6 +41,18 @@ public class Blackcat {
 
         Blackcat.reset(traceId, linkId, "URL", req.getMethod() + ":" + getURL(req));
     }
+
+    public static void prepareRPC(HttpURLConnection httpURLConn) {
+        BlackcatContext context = threadLocal.get();
+        if (context == null) return;
+
+        log("RPC",  httpURLConn.getRequestMethod() + ":" + httpURLConn.getURL());
+
+        httpURLConn.addRequestProperty(BLACKCAT_TRACE_ID, context.getTraceId());
+        String linkId = context.getParentLinkId() + "." + context.getSubLinkId();
+        httpURLConn.addRequestProperty(BLACKCAT_LINK_ID, linkId);
+    }
+
 
     public static void log(String pattern, Object... args) {
         log("LOG", pattern, args);

@@ -1,5 +1,7 @@
 package com.ailk.ecs.esf.base.exception;
 
+import java.io.IOException;
+
 /**
  * Exception for ECS FrameWork.
  * 
@@ -13,6 +15,10 @@ public class EsfException extends RuntimeException {
      */
     public EsfException(String message) {
         super(message);
+    }
+
+    public EsfException(String s, Throwable e) {
+
     }
 
 }
