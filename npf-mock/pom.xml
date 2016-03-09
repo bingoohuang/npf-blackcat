@@ -6,7 +6,7 @@
 
     <groupId>cn.ai.ebs</groupId>
     <artifactId>npf-mock</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <dependencies>
 

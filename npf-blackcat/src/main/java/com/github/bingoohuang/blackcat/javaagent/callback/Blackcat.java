@@ -1,6 +1,7 @@
 package com.github.bingoohuang.blackcat.javaagent.callback;
 
 import com.github.bingoohuang.blackcat.BlackcatContext;
+import com.github.bingoohuang.blackcat.utils.Unsensitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -75,7 +76,8 @@ public class Blackcat {
         String traceId = blackcatContext.getTraceId();
         String linkId = parentLinkId + "." + subLinkId;
 
-        log.info("Blackcat:{}##{}##{}##{}", traceId, linkId, msgType, msg);
+        String unsensitiveMsg = Unsensitive.unsensitive(msg);
+        log.info("Blackcat:{}##{}##{}##{}", traceId, linkId, msgType, unsensitiveMsg);
     }
 
 
