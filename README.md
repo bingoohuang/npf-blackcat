@@ -4,9 +4,10 @@ blackcat support for NPF project
 # How to install
   1. Put ibatis-enhanced before ibatis in pom.xml dependencies.
   2. Put npf-blackcat before springweb, esfservicecommon, eop framework in pom.xml dependencies.
-  3. Do not depend on npf-mock, which is for debugging and compiling.
+  3. Add cn.ai.ebs.npf.BlackcatStrutsInterceptor to struts intercepteors config.
+  4. Do not depend on npf-mock, which is for debugging and compiling.
 
-# How to config sensitive filter in log 
+# How to config sensitive filter in log
   1. Use EsfProperties config system.
   1. add `Blackcat.Unsensitive.Config=[content]` to config file.
   2. Content should be in JSON array format, like `[{pattern:"(?<=PASSWORD:)[^\s]+"}, {pattern:"(?is)(?<=<PASSWORD>).*(?=</PASSWORD>)"}]`
