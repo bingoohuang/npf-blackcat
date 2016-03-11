@@ -1,6 +1,8 @@
 package com.github.bingoohuang.blackcat;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BlackcatUtils {
     public static boolean classExists(String className) {
@@ -28,5 +30,14 @@ public class BlackcatUtils {
 
         com.github.bingoohuang.blackcat.javaagent.callback
                 .Blackcat.reset(httpServletRequest);
+    }
+
+    static Pattern OneLineTrimPattern = Pattern.compile("[\\s\r\n]+");
+
+    public static String oneLine(String original) {
+        Matcher matcher = OneLineTrimPattern.matcher(original);
+        String oneLine = matcher.replaceAll(" ");
+
+        return oneLine;
     }
 }
