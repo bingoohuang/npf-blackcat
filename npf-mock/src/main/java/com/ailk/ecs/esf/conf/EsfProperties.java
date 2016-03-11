@@ -5,6 +5,10 @@ public class EsfProperties {
         return null;
     }
 
+    public static String getProperty(String key) {
+        return null;
+    }
+
     public static int getInt(String key, int defaultValue) {
         return defaultValue;
     }

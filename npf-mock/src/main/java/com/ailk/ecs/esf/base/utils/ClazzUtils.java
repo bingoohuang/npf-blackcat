@@ -7,11 +7,11 @@ public class ClazzUtils {
         return null;
     }
 
-    public static Method getMethod(Class serviceClass, String methodName, Class<?>[] mapClass) {
+    public static Method getMethod(Class serviceClass, String methodName, Class<?>... mapClass) {
         return null;
     }
 
-    public static Method getExactMethod(Class serviceClass, String methodName, Class[] argTypes) {
+    public static Method getExactMethod(Class serviceClass, String methodName, Class<?>... argTypes) {
         return null;
     }
 }
