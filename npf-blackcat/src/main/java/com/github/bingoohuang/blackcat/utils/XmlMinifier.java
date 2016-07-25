@@ -1,16 +1,18 @@
 package com.github.bingoohuang.blackcat.utils;
 
+import lombok.experimental.UtilityClass;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Stack;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@UtilityClass
 public class XmlMinifier {
-    static Pattern xmlPIPattern = Pattern.compile("<\\?.*?\\?>");
-    static Pattern whitePattern = Pattern.compile("\\s+");
-    static Pattern openTagPattern = Pattern.compile("<(\\w+?)>");
-    static Pattern closeTagPattern = Pattern.compile("</\\w+?>");
+    Pattern xmlPIPattern = Pattern.compile("<\\?.*?\\?>");
+    Pattern whitePattern = Pattern.compile("\\s+");
+    Pattern openTagPattern = Pattern.compile("<(\\w+?)>");
+    Pattern closeTagPattern = Pattern.compile("</\\w+?>");
 
     /**
      * 简单形式的XML迷你化.
@@ -22,7 +24,7 @@ public class XmlMinifier {
      * 例如:
      * <abc><efg>value</efg></abc>将被转换为abc:efg:value$$
      */
-    public static String minify(String xmlMsg) {
+    public String minify(String xmlMsg) {
         // 去除所有的例如<pre><?xml version="1.0" encoding="UTF-8"?></pre>的XML PI
         String minified = xmlPIPattern.matcher(xmlMsg).replaceAll("");
         // 去除所有的空白字符(包括换行符)
@@ -38,7 +40,7 @@ public class XmlMinifier {
         return minified;
     }
 
-    static Pattern recoverOpenTagPattern = Pattern.compile("(\\w+?):");
+    Pattern recoverOpenTagPattern = Pattern.compile("(\\w+?):");
 
     /**
      * XML 部分恢复(不包括空白字符的恢复).
@@ -47,7 +49,7 @@ public class XmlMinifier {
      * <?xml version="1.0" encoding="UTF-8"?><abc><efg>value</efg></abc>
      * </pre>
      */
-    public static String recover(String minified) {
+    public String recover(String minified) {
         // 恢复开始标签
         String recovered = recoverOpenTagPattern.matcher(minified).replaceAll("<$1>");
         // 恢复结束标签
@@ -55,7 +57,7 @@ public class XmlMinifier {
 
         // 恢复接口报文中的CDATA块
         recovered = StringUtils.replace(recovered, "<SvcCont>",
-                "<SvcCont><![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            "<SvcCont><![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         recovered = StringUtils.replace(recovered, "</SvcCont>", "]]></SvcCont>");
 
         // 恢复XML PI
@@ -64,17 +66,18 @@ public class XmlMinifier {
         return recovered;
     }
 
-    static Pattern openTagOrEndTagPattern = Pattern.compile("<\\w+?>|\\$(?=<|$|\\$)");
-    private static String recoverCloseTag(String recovered) {
-        Matcher matcher = openTagOrEndTagPattern.matcher(recovered);
+    Pattern openTagOrEndTagPattern = Pattern.compile("<\\w+?>|\\$(?=<|$|\\$)");
 
-        Stack<String> openTags = new Stack<String>();
-        StringBuffer sb = new StringBuffer();
+    private String recoverCloseTag(String recovered) {
+        val matcher = openTagOrEndTagPattern.matcher(recovered);
+
+        val openTags = new Stack<String>();
+        val sb = new StringBuffer();
         while (matcher.find()) {
-            String tag = matcher.group();
+            val tag = matcher.group();
             if (tag.equals("$")) {
-                String openTag = openTags.pop();
-                String closeTag = "</" + openTag.substring(1);
+                val openTag = openTags.pop();
+                val closeTag = "</" + openTag.substring(1);
                 matcher.appendReplacement(sb, closeTag);
             } else {
                 openTags.push(tag);
